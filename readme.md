@@ -1,0 +1,2 @@
+1. 根据自己的情况更改 [config.DjiConfig](https://github.com/zzlsix/dji-terra/blob/master/src/main/java/config/DjiConfig.java) 文件
+2. 快速启动项目 [Bootstrap.java](https://github.com/zzlsix/dji-terra/blob/master/src/main/java/Bootstrap.java)

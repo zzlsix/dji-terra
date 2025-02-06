@@ -17,14 +17,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 将本地图片上传至oss服务器
+ */
 @Slf4j
-public class UploadFile {
+public class Uploader {
 
-    public static void upload(Token token) {
-        doUploadFile(token.getAccessKeyID(), token.getSecretAccessKey(), token.getCloudBucketName(), token.getStorePath(), token.getSessionToken());
+    public static boolean upload(Token token) {
+        return doUploadFile(token.getAccessKeyID(), token.getSecretAccessKey(), token.getCloudBucketName(), token.getStorePath(), token.getSessionToken());
     }
 
     private static boolean doUploadFile(String accessKeyId, String secretAccessKey, String bucketName, String storePath, String token) {
+        log.info("准备上传文件");
         boolean success = false;
         OSS ossClient = new OSSClientBuilder().build(DjiConfig.ENDPOINT, accessKeyId, secretAccessKey, token);
         List<Map<String, String>> uploadedFiles = new ArrayList<>();
@@ -39,7 +43,7 @@ public class UploadFile {
                         try {
                             PutObjectResult putResult = ossClient.putObject(bucketName, ossFilePath, path.toFile());
                             String etag = putResult.getETag();
-                            System.out.println("Uploaded: " + path + " -> " + ossFilePath + ", etag: " + etag);
+                            log.info("Uploaded: {} -> {}, etag: {}", path, ossFilePath, etag);
 
                             Map<String, String> fileInfo = new HashMap<>();
                             fileInfo.put("name", relativePath.replace("\\", "/"));

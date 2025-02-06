@@ -18,10 +18,14 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 资源管理
+ */
 @Slf4j
-public class ResourceBuilder {
-
+public class ResourceManager {
+    /**
+     * 创建资源
+     */
     public static SimpleResource createResource(String resourceName) {
         CreateResourceParam param = new CreateResourceParam(resourceName);
         String paramStr = JSONUtil.toJsonStr(param);
@@ -30,7 +34,11 @@ public class ResourceBuilder {
         return simpleResource;
     }
 
-    public static JSONObject associateFile(String resourceUuid, String callbackParam) throws IOException {
+    /**
+     * 给指定的资源关联文件
+     */
+    public static void associateFile(String resourceUuid, String callbackParam) throws IOException {
+        log.info("关联文件，resourceUuid:{},callbackParam:{}", resourceUuid, callbackParam);
         byte[] fileBytes = Files.readAllBytes(Paths.get("uploaded_files.json"));
         String filesJson = new String(fileBytes, StandardCharsets.UTF_8);
         List<AssociateFileParam.SingleFile> fileList = JSONUtil.toList(filesJson, AssociateFileParam.SingleFile.class);
@@ -59,7 +67,6 @@ public class ResourceBuilder {
                 payloadList.clear();
             }
         }
-        return null;
     }
 
     public static void main(String[] args) {

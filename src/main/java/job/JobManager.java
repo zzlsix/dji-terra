@@ -4,20 +4,34 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.aliyun.oss.HttpMethod;
 import config.DjiConfig;
+import lombok.extern.slf4j.Slf4j;
 import param.CreateJobParam;
 import param.StartJobParam;
 import pojo.Job;
 import pojo.SimpleJob;
 import request.DjiRequest;
 
-public class JobBuilder {
+/**
+ * 管理job
+ */
+@Slf4j
+public class JobManager {
 
+    /**
+     * 创建 job
+     */
     public static SimpleJob creatJob(String jobName) {
         CreateJobParam createJobParam = new CreateJobParam(jobName);
-        return JSONUtil.toBean((JSONObject) DjiRequest.access(DjiConfig.URI_CREAT_JOB, JSONUtil.toJsonStr(createJobParam), HttpMethod.POST), SimpleJob.class);
+        SimpleJob simpleJob = JSONUtil.toBean((JSONObject) DjiRequest.access(DjiConfig.URI_CREAT_JOB, JSONUtil.toJsonStr(createJobParam), HttpMethod.POST), SimpleJob.class);
+        log.info("创建作业，jobUuid:{}", simpleJob.getUuid());
+        return simpleJob;
     }
 
+    /**
+     * 启动 3d 的 job，其他形式的job目前没有了解，有需要再扩展
+     */
     public static void start3dJob(String resourceUuid, String jobUuid) {
+        log.info("启动作业，resourceUuid:{},jobUuid:{}", resourceUuid, jobUuid);
         String url = DjiConfig.URI_START_JOB.replace("{jobUuid}", jobUuid);
         // 参数后续再封装
         String param = "{\"parameter\":{\"output_mesh\": true,\"generate_obj\": true,\"generate_b3dm\": true,\"generate_osgb\": true}}";
@@ -25,7 +39,11 @@ public class JobBuilder {
         DjiRequest.access(url, JSONUtil.toJsonStr(startJobParam), HttpMethod.POST);
     }
 
+    /**
+     * 获取job信息
+     */
     public static Job getJobStatus(String jobUuid) {
+        log.info("查询作业详情，jobUuid:{}", jobUuid);
         String url = DjiConfig.URI_GET_JOB.replace("{jobUuid}", jobUuid);
         return JSONUtil.toBean((JSONObject) DjiRequest.access(url, "", HttpMethod.GET), Job.class);
     }

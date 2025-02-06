@@ -3,9 +3,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-./uploaded_files.json
-./result/
-
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
@@ -39,3 +36,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/uploaded_files.json
+/result/
